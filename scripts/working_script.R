@@ -39,12 +39,24 @@ the_data$release_date <- as.Date(the_data$release_date, "%B %d %Y")
 ## to be a ")"
 the_data$release_country <- str_sub(the_data$release_country, 1, nchar(the_data$release_country)-1) 
 
+## Visualise
 
-
-
+## histogram of amount grossed by each
 ggplot(the_data) + 
   geom_histogram(aes(gross), fill = "blue", color = "white") + 
   scale_x_log10()
+
+## histogram of budget of each
+ggplot(the_data) + 
+  geom_histogram(aes(budget), fill = "blue", color = "white") + 
+  scale_x_log10()
+
+## Is there a relationship between budget and gross?
+ggplot(the_data, aes(budget, gross)) + 
+  geom_point(alpha = 0.4) + geom_smooth() + scale_x_log10() + 
+  scale_y_log10()
+## The higher the budget, the higher the amounted grossed
+
 ## get the most frequent companies
 the_data %>% group_by(company) %>% summarise(n = n()) %>% 
   slice_max(n, n = 10) %>% ggplot() + 
