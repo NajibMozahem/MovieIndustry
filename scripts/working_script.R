@@ -314,6 +314,7 @@ data_analysis %>%
               "score", "runtime"), ~scale(.) %>% as.vector) %>% 
   group_by(cluster) %>% summarise(budget = mean(budget, na.rm = TRUE),
                                   gross = mean(gross, na.rm = TRUE),
+                                  score = mean(score, na.rm = TRUE),
                                   runtime = mean(runtime, na.rm = TRUE),
                                   star = mean(top_star, na.rm = TRUE),
                                   company = mean(top_company, na.rm = TRUE),
@@ -321,12 +322,14 @@ data_analysis %>%
                                   vacation = mean(release_vacation, na.rm = TRUE)) %>% kable(., digits = 2)
 
 ## Looking at the table we see that clusters 3 and 11 are made up
-## of the mvoies with the largest budgets and that have grossed
+## of the movies with the largest budgets and that have grossed
 ## the most. However, the difference between the two is that 
 ## cluster 3 contains movies released during the holidays while
 ## cluster 11 consists of movies not released during holidays.
 ## Cluster 7 on the other hand is made up of foreign movies, i.e.
-## those that were not made by American companies. Cluster 6 is 
+## those that were not made by American companies. We note that these
+## films tend to have a relatively high score. Cluster 6 is 
 ## interesting because it is made up of movies that had a top star,
 ## were made by a top company, but did not have excessively large
-## budgets and were not released during the holidays.
+## budgets. were not released during the holidays, and had a high
+## score.
