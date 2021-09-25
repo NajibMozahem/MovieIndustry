@@ -1,5 +1,5 @@
 packages <- c("tidyverse", "stringr", "cluster", "factoextra",
-              "Rtsne", "lares", "ggridges")
+              "Rtsne", "lares", "ggridges", "knitr")
 
 lapply(packages, function(x) {
   if (!require(x, character.only = TRUE)) {
@@ -302,3 +302,31 @@ geom_raster(aes(cluster, genre, fill = n)) +
 ## We see that most genres are spread throughout the cluster.
 ## There are some exceptions, such as family being grouped
 ## in three clusters.
+
+## Let us produce some summary data for movies in each cluster. The
+## following table shows the mean standardized budget, gross, and
+## runtime, in addition to the ratio of movies in each cluster
+## that have a top star, were made by a top company, were released
+## in the USA, and were released during vacation time:
+
+data_analysis %>% 
+  mutate_at(c("gross", "budget", 
+              "score", "runtime"), ~scale(.) %>% as.vector) %>% 
+  group_by(cluster) %>% summarise(budget = mean(budget, na.rm = TRUE),
+                                  gross = mean(gross, na.rm = TRUE),
+                                  runtime = mean(runtime, na.rm = TRUE),
+                                  star = mean(top_star, na.rm = TRUE),
+                                  company = mean(top_company, na.rm = TRUE),
+                                  USA = mean(USA, na.rm = TRUE),
+                                  vacation = mean(release_vacation, na.rm = TRUE)) %>% kable(., digits = 2)
+
+## Looking at the table we see that clusters 3 and 11 are made up
+## of the mvoies with the largest budgets and that have grossed
+## the most. However, the difference between the two is that 
+## cluster 3 contains movies released during the holidays while
+## cluster 11 consists of movies not released during holidays.
+## Cluster 7 on the other hand is made up of foreign movies, i.e.
+## those that were not made by American companies. Cluster 6 is 
+## interesting because it is made up of movies that had a top star,
+## were made by a top company, but did not have excessively large
+## budgets and were not released during the holidays.
